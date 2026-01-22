@@ -1,0 +1,60 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<header>
+    <a id="logo" href="/"><img id="logo" src="{{ url_for('static', filename='EC_Logo_Black.jpg') }}" alt="Error"></a>
+    <a href="/newCust"><button>new Customers</button></a>
+    <a href="/NewJob"><button>New Job</button></a>
+    <a href="/CustSearch"><button>Search</button></a>
+
+</header>
+<body>
+{% block content %}
+<H2>Todays Jobs</H2>
+<Table id="tableMain">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Cust Name</th>
+            <th>Bike</th>
+            <th>Select</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for jobs in JobCards %}
+        <tr>
+            <td id="ID">{{ jobs.JobID }}</td>
+            <td>{{ jobs.custID }}</td>
+            <td>{{ jobs.bikeID }}</td>
+            <td id="Select"><a href=""><button>Select</button></a></td> 
+        </tr>
+        {% endfor %}
+    </tbody>
+</Table>
+<table id="tableMain">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            
+            
+        </tr>
+    </thead>
+    <tbody>
+        {%for Customers in Customers %}
+        <tr>
+            <td id="ID">{{ Customers.Cust_ID }}</td>
+            <td id="ID" >{{ Customers.CustFName }} {{ Customers.CustLName }}</td>
+            
+            
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Customer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<header>
+    <a id="logo" href="/"><img id="logo" src="{{ url_for('static', filename='EC_Logo_Black.jpg') }}" alt="Error"></a>
+    <a href="/newCust"><button>new Customers</button></a>
+    <a href="/NewJob"><button>New Job</button></a>
+</header>
+<body>
+{% block content %}
+    <form method="post">
+        <label for="CustFName">First Name:</label>
+        <input type="text" name="CustFName" id="CustFName" required>
+        <label for="CustLName">Last Name</label>
+        <input type="text" name="CustLName" id="CustLName" required>
+        <label for=""></label>
+        <input type="text" name="" id="">
+        <label for="CustDetails">Customer's notes </label>
+        <textarea name="CustDetails" id="CustDetails" ></textarea>
+        <button type="submit">Submit</button>
+    </form>
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<header>
+    <a  href="/"><img id="logo" src="{{ url_for('static', filename='EC_Logo_Black.jpg') }}" alt="Error"></a>
+    <a href="/newCust"><button>new Customers</button></a>
+    <a href="/NewJob"><button>New Job</button></a>
+</header>
+<body>
+    <form method="POST" action="{{ url_for('CustSearch') }}">
+        <input type="text" name="Search">
+        <button type="submit">Search</button>
+    </form>
+    
+  
+    
+    
+    {% block content %}
+
+    <table id="tableMain">
+        
+        <tbody>
+            {% for result in result %}
+            <tr>
+               
+                <td>{{ result.Cust_ID }}</td>
+                <td>{{ result.custFName }} {{ result.custLName }}</td>
+                <td><form action="{{ url_for('CustInfo', id=result.Cust_ID) }}" method="post"  style="display:inline;">
+                    <button  type="submit">Select</button></form></td> 
+                <td><form action="{{ url_for('delete_user', id=result.Cust_ID) }}" method="post"  style="display:inline;">
+                    <button  type="submit">Delete</button>
+                </form></td>
+                
+            </tr>
+            {% endfor %}
+        </tbody>
+        
+    </table>
+    {% endblock %}
+</body>
+</html>

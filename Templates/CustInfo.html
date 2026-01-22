@@ -1,0 +1,53 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<header>
+    <a id="logo" href="/"><img id="logo" src="{{ url_for('static', filename='EC_Logo_Black.jpg') }}" alt="Error"></a>
+    <a href="/newCust"><button>new Customers</button></a>
+    <a href="/NewJob"><button>New Job</button></a>
+    <a href="/CustSearch"><button>Search</button></a>
+
+</header>
+<body>
+{% block content %}   
+    <div id="custData">
+        <table>
+            <thead>
+                <td>ID</td>
+                <td>First name</td>
+                <td>last name</td>
+                <td>Phone number</td>
+                <td>email</td>
+            </thead>
+            <tbody>
+                {% for Customer in result %}
+                <form method="post" id="CustData">
+                    <td>{{ Customer.Cust_ID }}</td>
+                    <td><input type="text" name="CustFName" value="{{ Customer.custFName }}" id=""></td>
+                    <td><input type="text" name="CustLName" value="{{ Customer.custLName }}" id=""></td>
+                    <td><input type="text" name="CustPNumber" value="{{ Customer.CustPNumber }}" id=""></td>
+                    <td><input type="text" name="CustEmail" value="{{ Customer.CustEmail }}" id=""></td>
+                    <button type="submit">Up Date</button>
+                </form>
+                {% endfor %}
+            </tbody>
+           
+        </table>
+    </div>
+    <div id="custDesc">
+        <table>
+            {% for Customer in result %}
+            <td><textarea name="CustDetails" form="CustData" id="CustDetails">{{ Customer.CustDetails }}</textarea></td>
+            {% endfor %}
+        </table>
+    </div>   
+
+   
+    
+{% endblock %}    
+</body>
+</html>
