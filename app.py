@@ -20,9 +20,12 @@ def init_db():
 def index():
     conn = get_db_conn()
     sql = "SELECT * FROM  Customers"
+    sql2 = "SELECT * FROM  jobs"
     Customers = conn.execute(sql).fetchall()
+    jobs = conn.execute(sql2).fetchall()
+
     conn.close()
-    return render_template("index.html",Customers=Customers)
+    return render_template("index.html",Customers=Customers, jobs = jobs)
 
 @app.route('/newCust',methods=('POST','GET'))
 def newCust():
@@ -57,11 +60,11 @@ def CustSearch():
 
 @app.route('/Cust/<int:id>', methods=['GET', 'POST'])
 def CustInfo(id):
-    print(id)
     conn = get_db_conn()
     result = conn.execute('SELECT * FROM Customers WHERE Cust_ID = (?)',(id,)).fetchall()
-    conn.close
+    conn.close()
     print(result)
+    
     if request.method == 'POST':
         CustFName = request.form['CustFName']
         CustLName = request.form['CustLName']
@@ -69,26 +72,46 @@ def CustInfo(id):
         CustEmail = request.form['CustEmail']
         CustDetails = request.form['CustDetails']
         conn = get_db_conn()
-        conn.execute('UPDATE Customers SET CustFName = ?,CustLName = ?,CustPNumber = ?, CustEmail = ? , CustDetails = ?  WHERE Cust_ID = ?',(CustFName,CustLName,CustPNumber,CustEmail,CustDetails,id))
+        conn.execute('UPDATE Customers SET CustFName = ?,CustLName = ?,CustPNumber = ?, CustEmail = ? , CustDetails = ? \
+                      WHERE Cust_ID = ?',(CustFName,CustLName,CustPNumber,CustEmail,CustDetails,id))
         conn.commit()
         conn.close()
         return redirect(url_for('index'))
-    else:
-        return render_template('CustInfo.html', result=result)
-
     
+    return render_template('CustInfo.html', result=result)
 @app.route('/delete/<int:id>', methods=('POST',))
 def delete_user(id):
     print(id)
-    conn = get_db_conn()
+    conn = get_db_conn()    
     conn.execute('DELETE FROM Customers WHERE cust_ID = (?)', (id,))
     conn.commit() 
     conn.close()
     flash('User deleted successfully!')
     return redirect(url_for('index'))
-@app.route('/NewJob',methods=('POST','GET'))
-def newjob():
-    return render_template("newjob.html")
+
+@app.route('/NewJobCard',methods=('POST','GET'))
+def NewJobCard():
+    conn = get_db_conn()
+
+    search = request.args.get('search', '')
+    result = []
+    if search:
+        result = conn.execute(
+            "SELECT * FROM Customers WHERE CustFName LIKE ?",
+            ('%' + search + '%',)
+        ).fetchall()
+    if request.method == 'POST':
+        Cust_ID = request.form['Cust_ID']
+        BikeBrand = request.form['BikeBrand']
+        BikeModel = request.form['BikeModel']
+        JobDetails = request.form['JobDetails']
+        print('INSERT INTO Jobs (Cust_ID,BikeBrand,BikeModel,JobDetails) VALUES (?,?,?,?)',(Cust_ID,BikeBrand,BikeModel,JobDetails))
+        conn.execute('INSERT INTO Jobs (Cust_ID,BikeBrand,BikeModel,JobDetails) VALUES (?,?,?,?)',(Cust_ID,BikeBrand,BikeModel,JobDetails))
+        conn.commit()
+        return redirect(url_for('index'))
+   
+    conn.close()
+    return render_template("NewJobCard.html", result=result, search=search)
         
 
 

@@ -9,7 +9,8 @@
 <header>
     <a  href="/"><img id="logo" src="{{ url_for('static', filename='EC_Logo_Black.jpg') }}" alt="Error"></a>
     <a href="/newCust"><button>new Customers</button></a>
-    <a href="/NewJob"><button>New Job</button></a>
+    <a href="/NewJobCard"><button>New Job</button></a>
+    <a href="/CustSearch"><button>Search</button></a>
 </header>
 <body>
     <form method="POST" action="{{ url_for('CustSearch') }}">
@@ -30,7 +31,7 @@
                
                 <td>{{ result.Cust_ID }}</td>
                 <td>{{ result.custFName }} {{ result.custLName }}</td>
-                <td><form action="{{ url_for('CustInfo', id=result.Cust_ID) }}" method="post"  style="display:inline;">
+                <td><form action="{{ url_for('CustInfo', id=result.Cust_ID) }}" method="get"  style="display:inline;">
                     <button  type="submit">Select</button></form></td> 
                 <td><form action="{{ url_for('delete_user', id=result.Cust_ID) }}" method="post"  style="display:inline;">
                     <button  type="submit">Delete</button>

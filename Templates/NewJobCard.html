@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New job</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<header>
+    <a  href="/"><img id="logo" src="{{ url_for('static', filename='EC_Logo_Black.jpg') }}" alt="Error"></a>
+    <a href="/newCust"><button>new Customers</button></a>
+    <a href="/NewJobCard"><button>New Job</button></a>
+    <a href="/CustSearch"><button>Search</button></a>
+</header>
+<body>
+{% block content %}
+<div style="text-align: center;">
+    <form method="get" action="{{ url_for('NewJobCard') }}">
+        <input type="text" name="search" placeholder="Search customers" value="{{ search }}">
+        <button type="submit">Search</button>
+    </form>
+</div>
+    <table>
+        <tbody>
+            {% for  result in  result %}
+            <tr>                
+                <td>{{result.Cust_ID}}</td>
+                <td>{{result.CustFName}} {{result.CustLName}}</td>
+                <td>{{result.CustPNumber}}</td>
+                <form method="post" >
+
+                
+                <td><input type="checkbox" name="Cust_ID" id="Cust_ID" value={{result.Cust_ID}}></td>            
+            </tr>
+            {%endfor%}
+        </tbody>
+    </table>
+    <table>
+        <tr>
+            <td><input placeholder="Bike brand" type="text" name="BikeBrand" id="BikeBrand"></td>
+            <td><input placeholder="Bike Model" type="text" name="BikeModel" id="BikeModel"></td>
+            
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <td><label for="JobDetails">Job Details</label></td>
+        </tr>
+        <tr>
+            <td><textarea name="JobDetails" id="JobDetails" style="margin-top: 1%;" ></textarea></td>
+        
+        </tr>
+        <button type="submit">submit</button>
+    </form>
+        
+        
+    </table>
+    
+{% endblock %}
+</body>
+</html>

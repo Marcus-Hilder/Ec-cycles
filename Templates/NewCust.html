@@ -9,7 +9,8 @@
 <header>
     <a id="logo" href="/"><img id="logo" src="{{ url_for('static', filename='EC_Logo_Black.jpg') }}" alt="Error"></a>
     <a href="/newCust"><button>new Customers</button></a>
-    <a href="/NewJob"><button>New Job</button></a>
+    <a href="/NewJobCard"><button>New Job</button></a>
+    <a href="/CustSearch"><button>Search</button></a>
 </header>
 <body>
 {% block content %}
@@ -18,8 +19,7 @@
         <input type="text" name="CustFName" id="CustFName" required>
         <label for="CustLName">Last Name</label>
         <input type="text" name="CustLName" id="CustLName" required>
-        <label for=""></label>
-        <input type="text" name="" id="">
+        <!-- dont add more as you would pull from light speed and inport like than Therefor this page just for testing-->
         <label for="CustDetails">Customer's notes </label>
         <textarea name="CustDetails" id="CustDetails" ></textarea>
         <button type="submit">Submit</button>

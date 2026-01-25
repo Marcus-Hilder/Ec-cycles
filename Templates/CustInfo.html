@@ -13,41 +13,40 @@
 
 </header>
 <body>
-{% block content %}   
-    <div id="custData">
+    {% block content %}
+
+    <form method="post">
         <table>
             <thead>
-                <td>ID</td>
-                <td>First name</td>
-                <td>last name</td>
-                <td>Phone number</td>
-                <td>email</td>
+                <tr>
+                    <td>ID</td>
+                    <td>First name</td>
+                    <td>Last name</td>
+                    <td>Phone number</td>
+                    <td>Email</td>
+                </tr>
             </thead>
             <tbody>
                 {% for Customer in result %}
-                <form method="post" id="CustData">
+                <tr>
                     <td>{{ Customer.Cust_ID }}</td>
-                    <td><input type="text" name="CustFName" value="{{ Customer.custFName }}" id=""></td>
-                    <td><input type="text" name="CustLName" value="{{ Customer.custLName }}" id=""></td>
-                    <td><input type="text" name="CustPNumber" value="{{ Customer.CustPNumber }}" id=""></td>
-                    <td><input type="text" name="CustEmail" value="{{ Customer.CustEmail }}" id=""></td>
-                    <button type="submit">Up Date</button>
-                </form>
+                    <td><input type="text" name="CustFName" value="{{ Customer.CustFName }}"></td>
+                    <td><input type="text" name="CustLName" value="{{ Customer.CustLName }}"></td>
+                    <td><input type="text" name="CustPNumber" value="{{ Customer.CustPNumber }}"></td>
+                    <td><input type="text" name="CustEmail" value="{{ Customer.CustEmail }}"></td>
+                </tr>
                 {% endfor %}
             </tbody>
-           
         </table>
-    </div>
-    <div id="custDesc">
-        <table>
-            {% for Customer in result %}
-            <td><textarea name="CustDetails" form="CustData" id="CustDetails">{{ Customer.CustDetails }}</textarea></td>
-            {% endfor %}
-        </table>
-    </div>   
-
-   
     
-{% endblock %}    
+        {% for Customer in result %}
+        <textarea name="CustDetails" id="CustDetails">{{ Customer.CustDetails }}</textarea>
+        {% endfor %}
+    
+        <button type="submit">Update</button>
+    </form>
+    
+    {% endblock %}
+      
 </body>
 </html>
