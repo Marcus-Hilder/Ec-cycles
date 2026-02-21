@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block head %}
-<form class="d-flex" role="search" action="{{ url_for('CustSearch')}}" method="get">
+<form class="d-flex" role="search" action="{{ url_for('JobSearch')}}" method="get">
     <input class="form-control me-2" type="search" placeholder="Customer Search" name="search" aria-label="Search"/>
     <button class="btn btn-outline-success" type="submit">Search</button>
   </form>   
@@ -21,12 +21,11 @@
         <tbody>
             {% for CustInfo in CustInfo %}
             <tr>
-               
                 <td>{{ CustInfo.Cust_ID }}</td>
                 <td>{{ CustInfo.custFName }} {{ CustInfo.custLName }}</td>
                 <td></td>
                 <td><form action="{{ url_for('CustInfo', id=CustInfo.Cust_ID) }}" method="get"  style="display:inline;">
-                    <button class="btn btn-outline-Primary m-1" type="submit">Select</button></form></td> 
+                    <button type="submit">Select</button></form></td> 
             </tr>
             {% endfor %}
         </tbody>

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block head %}
+<form class="d-flex" role="search" action="{{ url_for('JobSearch')}}" method="get">
+    <input class="form-control me-2" type="search" placeholder="Jobs Search" name="search" aria-label="Search"/>
+    <button class="btn btn-outline-success" type="submit">Search</button>
+  </form>   
+{% endblock %}
+
+{% block content %}
+<div class="p-5">
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">job ID</th>
+            <th scope="col">Customer Name</th>
+            <th scope="col">bike</th>
+            <th scope="col">progres</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for JobInfo in JobInfo %}
+            <tr>
+                <td>{{ JobInfo.Cust_ID }}</td>
+                <td>{{ JobInfo.custFName }} {{ JobInfo.custLName }}</td>
+                <td>{{ JobInfo.BikeBrand }}, {{ JobInfo.BikeModel }}</td>
+                <td><form action="{{ url_for('JobSearch', id=JobInfo.Cust_ID) }}" method="get">
+                    <button type="submit">Select</button></form></td> 
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+    
+{% endblock %}

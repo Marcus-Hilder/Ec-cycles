@@ -33,7 +33,8 @@ h2{
     width: 15%;
     height: auto;
 }
-#CustDetails{
+
+textarea{
     height: 800px;;
     width: 90%;
     font-size: 14px;

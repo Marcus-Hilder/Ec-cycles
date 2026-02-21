@@ -1,52 +1,47 @@
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<header>
-    <a id="logo" href="/"><img id="logo" src="{{ url_for('static', filename='EC_Logo_Black.jpg') }}" alt="Error"></a>
-    <a href="/newCust"><button>new Customers</button></a>
-    <a href="/NewJob"><button>New Job</button></a>
-    <a href="/CustSearch"><button>Search</button></a>
+{% extends 'base.html' %}
+{% block head %}
+<form class="d-flex" role="search" action="{{ url_for('CustSearch')}}" method="get">
+    <input class="form-control me-2" type="search" placeholder="Customer Search" name="search" aria-label="Search"/>
+    <button class="btn btn-outline-success" type="submit">Search</button>
+  </form>   
+{% endblock %}
 
-</header>
-<body>
-    {% block content %}
-
-    <form method="post">
-        <table>
-            <thead>
-                <tr>
-                    <td>ID</td>
-                    <td>First name</td>
-                    <td>Last name</td>
-                    <td>Phone number</td>
-                    <td>Email</td>
-                </tr>
-            </thead>
+{% block content %}
+<div class="p-5">
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Customer ID</th>
+            <th scope="col">first Name</th>
+            <th scope="col"></th>
+            <th scope="col">Phone number</th>
+            <th scope="col">Email</th>
+            
+        </tr>
+        </thead>
+        <form method="post">
             <tbody>
-                {% for Customer in result %}
+                {% for CustInfo in CustInfo %}
                 <tr>
-                    <td>{{ Customer.Cust_ID }}</td>
-                    <td><input type="text" name="CustFName" value="{{ Customer.CustFName }}"></td>
-                    <td><input type="text" name="CustLName" value="{{ Customer.CustLName }}"></td>
-                    <td><input type="text" name="CustPNumber" value="{{ Customer.CustPNumber }}"></td>
-                    <td><input type="text" name="CustEmail" value="{{ Customer.CustEmail }}"></td>
+                    <td>{{ CustInfo.Cust_ID }}</td>
+                        <td><input type="text" name="CustFName" value="{{ CustInfo.CustFName }}"></td>
+                        <td><input type="text" name="CustLName" value="{{ CustInfo.CustLName }}"></td>
+                        <td><input type="text" name="CustPNumber" value="{{ CustInfo.CustPNumber }}"></td>
+                        <td><input type="text" name="CustEmail" value="{{ CustInfo.CustEmail }}"></td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-    
-        {% for Customer in result %}
-        <textarea name="CustDetails" id="CustDetails">{{ Customer.CustDetails }}</textarea>
-        {% endfor %}
-    
-        <button type="submit">Update</button>
-    </form>
-    
-    {% endblock %}
-      
-</body>
-</html>
+        <div class="card ">
+            {% for Customer in CustInfo %}
+            <div class="card-body">
+              <textarea name="CustDetails" style="height: 200px;"class="col-12 col-md-12 col-lg-12">{{Customer.CustDetails}}</textarea>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center">
+            <button class="btn btn-outline-success m-3" type="submit">Update</button>
+        </div>       
+        </form> 
+</div>
+{% endblock %}

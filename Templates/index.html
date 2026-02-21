@@ -1,60 +1,30 @@
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<header>
-    <a id="logo" href="/"><img id="logo" src="{{ url_for('static', filename='EC_Logo_Black.jpg') }}" alt="Error"></a>
-    <a href="/newCust"><button>new Customers</button></a>
-    <a href="/NewJobCard"><button>New Job</button></a>
-    <a href="/CustSearch"><button>Search</button></a>
+{% extends 'base.html' %}
 
-</header>
-<body>
 {% block content %}
-<H2>Todays Jobs</H2>
-<Table id="tableMain">
-    <thead>
+<div class="p-5">
+    <table class="table">
+        <thead>
         <tr>
-            <th>ID</th>
-            <th>Cust Name</th>
-            <th>Bike</th>
-            <th>Select</th>
+            <th scope="col">Job ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Bike</th>
+            <th scope="col">Duedate</th>
+            <th></th>
         </tr>
-    </thead>
-    <tbody>
-        {% for jobs in jobs %}
-        <tr>
-            <td >{{ jobs.JobID }}</td>
-            <td>{{ jobs.Cust_ID }}</td>
-            <td>{{ jobs.BikeBrand }}, {{ jobs.BikeModel }}</td>
-            <td id="Select"><a href=""><button>Select</button></a></td> 
-        </tr>
-        {% endfor %}
-    </tbody>
-</Table>
-<table id="tableMain">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            
-            
-        </tr>
-    </thead>
-    <tbody>
-        {%for Customers in Customers %}
-        <tr>
-            <td id="ID">{{ Customers.Cust_ID }}</td>
-            <td id="ID" >{{ Customers.CustFName }} {{ Customers.CustLName }}</td>
-            
-            
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            {% for jobs in jobs %}
+            <tr>
+                <td >{{ jobs.CustFName }} {{ jobs.CustLName }}</td>
+                <td>{{ jobs.jobID }}</td>
+                <td>{{ jobs.BikeBrand }}, {{ jobs.BikeModel }}</td>
+                <td></td>
+                <td id="Select"><form action="{{ url_for('CustInfo', id=jobs.Cust_ID) }}" method="get"  style="display:inline;">
+                    <button class="btn btn-outline-Primary m-3" type="submit">Select</button></form></td> 
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+    
 {% endblock %}
-</body>
-</html>

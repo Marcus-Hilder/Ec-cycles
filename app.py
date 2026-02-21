@@ -5,9 +5,9 @@ app = Flask(__name__)
 app.secret_key = "supersecretkey"
 
 def get_db_conn():
+    """setup connection to sql database"""
     conn = sqlite3.connect('JobCards.db')
     conn.row_factory = sqlite3.Row
-    
     return conn
     
 def init_db():
@@ -18,14 +18,13 @@ def init_db():
 
 @app.route('/')
 def index():
+    """main home page loads curent jobs but plans to have the 
+    curent day's jobs on it"""
     conn = get_db_conn()
-    sql = "SELECT * FROM  Customers"
-    sql2 = "SELECT * FROM  jobs"
-    Customers = conn.execute(sql).fetchall()
-    jobs = conn.execute(sql2).fetchall()
-
+    sql = "SELECT jobs.* ,Customers.CustFName,Customers.CustLName FROM Jobs INNER JOIN Customers ON Customers.Cust_ID = Jobs.Cust_ID;"
+    jobs = conn.execute(sql).fetchall()
     conn.close()
-    return render_template("index.html",Customers=Customers, jobs = jobs)
+    return render_template("index.html", jobs=jobs)
 
 @app.route('/newCust',methods=('POST','GET'))
 def newCust():
@@ -48,23 +47,35 @@ def newCust():
 def CustSearch():
     conn = get_db_conn()
 
-    if request.method == 'POST':
-        search = request.form['Search']
-        result = conn.execute(
-            "SELECT * FROM Customers WHERE CustFname LIKE ?",('%' + search + '%',)).fetchall()
-    else:
-        result = conn.execute("SELECT * FROM Customers").fetchall()
+    search = request.args.get("search")
 
+    if search:
+        words = search.split()
+        query = "SELECT * FROM Customers WHERE "
+        conditons = []
+        values = []
+
+        for word in words:
+            conditons.append("(custFName LIKE ? or CustLName LIKE ?)")
+            values.append("%"+ word + "%")
+            values.append("%"+ word + "%")
+        query += " AND ".join(conditons)
+
+        
+
+        CustInfo = conn.execute(query, values).fetchall()
+        
+    else:
+        CustInfo = conn.execute("SELECT * FROM Customers").fetchall()
+    
     conn.close()
-    return render_template('custSearch.html', result=result)
+    return render_template("custSearch.html", CustInfo=CustInfo)
 
 @app.route('/Cust/<int:id>', methods=['GET', 'POST'])
 def CustInfo(id):
     conn = get_db_conn()
-    result = conn.execute('SELECT * FROM Customers WHERE Cust_ID = (?)',(id,)).fetchall()
+    CustInfo = conn.execute('SELECT * FROM Customers WHERE Cust_ID = (?)',(id,)).fetchall()
     conn.close()
-    print(result)
-    
     if request.method == 'POST':
         CustFName = request.form['CustFName']
         CustLName = request.form['CustLName']
@@ -78,7 +89,7 @@ def CustInfo(id):
         conn.close()
         return redirect(url_for('index'))
     
-    return render_template('CustInfo.html', result=result)
+    return render_template('CustInfo.html', CustInfo=CustInfo)
 @app.route('/delete/<int:id>', methods=('POST',))
 def delete_user(id):
     print(id)
@@ -105,14 +116,50 @@ def NewJobCard():
         BikeBrand = request.form['BikeBrand']
         BikeModel = request.form['BikeModel']
         JobDetails = request.form['JobDetails']
-        print('INSERT INTO Jobs (Cust_ID,BikeBrand,BikeModel,JobDetails) VALUES (?,?,?,?)',(Cust_ID,BikeBrand,BikeModel,JobDetails))
         conn.execute('INSERT INTO Jobs (Cust_ID,BikeBrand,BikeModel,JobDetails) VALUES (?,?,?,?)',(Cust_ID,BikeBrand,BikeModel,JobDetails))
         conn.commit()
         return redirect(url_for('index'))
    
     conn.close()
     return render_template("NewJobCard.html", result=result, search=search)
+
+@app.route('/JobSearch',methods=('POST','GET'))
+def JobSearch():
+    conn = get_db_conn()
+
+    search = request.args.get("search")
+
+    if search:
+        words = search.split()
+        query = "SELECT * FROM Customers WHERE "
+        conditons = []
+        values = []
+
+        for word in words:
+            conditons.append("(custFName LIKE ? or CustLName LIKE ?)")
+            values.append("%"+ word + "%")
+            values.append("%"+ word + "%")
+        query += " AND ".join(conditons)
+
         
+
+        CustInfo = conn.execute(query, values).fetchall()
+        
+    else:
+        conn = get_db_conn()
+        sql = "SELECT jobs.* ,Customers.CustFName,Customers.CustLName FROM Jobs INNER JOIN Customers ON Customers.Cust_ID = Jobs.Cust_ID;"
+        JobInfo = conn.execute(sql).fetchall()
+        conn.close()
+    
+    conn.close()
+    return render_template("JobSearch.html", JobInfo=JobInfo)
+
+@app.route('/base', methods=['GET', 'POST'] )
+def base():
+   return render_template('JobSearch.html')
+
+
+      
 
 
 if __name__ == '__main__':
