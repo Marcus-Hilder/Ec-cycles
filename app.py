@@ -140,10 +140,7 @@ def JobSearch():
             values.append("%"+ word + "%")
             values.append("%"+ word + "%")
         query += " AND ".join(conditons)
-
-        
-
-        CustInfo = conn.execute(query, values).fetchall()
+        JobInfo = conn.execute(query, values).fetchall()
         
     else:
         conn = get_db_conn()
@@ -156,10 +153,10 @@ def JobSearch():
 
 @app.route('/base', methods=['GET', 'POST'] )
 def base():
-   return render_template('JobSearch.html')
-
-
-      
+   conn = get_db_conn()
+   sql = "SELECT jobs.* ,Customers.CustFName,Customers.CustLName FROM Jobs INNER JOIN Customers ON Customers.Cust_ID = Jobs.Cust_ID;"
+   JobInfo = conn.execute(sql).fetchall()
+   return render_template('viewjobcard.html', jobInfo=JobInfo)
 
 
 if __name__ == '__main__':

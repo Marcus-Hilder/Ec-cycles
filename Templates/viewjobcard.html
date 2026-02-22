@@ -1,9 +1,35 @@
 {% extends 'index.html' %}
 
 {% block content %}
- <table>
-    <tr>
-        <td>    </td>
-    </tr>
- </table>
+<div class="p-5">
+    <div class="row mb-3 text-center">
+        {% for jobInfo in jobInfo %}
+        <div class="col-3 themed-grid-col">{{ jobInfo.CustFName }} {{ jobInfo.CustLName }}</div>
+        <div class="col-3 themed-grid-col"></div>
+        {% endfor %}
+    </div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Job ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Bike</th>
+            <th scope="col">Duedate</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for jobs in jobs %}
+            <tr>
+                <td >{{ jobs.CustFName }} {{ jobs.CustLName }}</td>
+                <td>{{ jobs.jobID }}</td>
+                <td>{{ jobs.BikeBrand }}, {{ jobs.BikeModel }}</td>
+                <td></td>
+                <td id="Select"><form action="{{ url_for('CustInfo', id=jobs.Cust_ID) }}" method="get"  style="display:inline;">
+                    <button class="btn btn-outline-Primary m-3" type="submit">Select</button></form></td> 
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}
