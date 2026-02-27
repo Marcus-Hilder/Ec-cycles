@@ -32,7 +32,7 @@
                 </a>
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="#">New customer</a></li>
-                  <li><a class="dropdown-item" href="#">New Job</a></li>
+                  <li><a class="dropdown-item" href="/NewJobCard1">New Job</a></li>
                   <!-- <li><hr class="dropdown-divider"></li>
                   <li><a class="dropdown-item" href="#">Something else here</a></li> -->
                 </ul>
@@ -47,6 +47,15 @@
           </div>
         </div>
     </nav>
+    <div class="container-fluid"></div>
+    <div class="row mb-3 text-center pt-3">
+        
+        <div class="col-3 themed-grid-col">
+            <h4>{{time["Date"]}}</h4>
+        </div>
+        <div class="col-3 themed-grid-col"></div>
+        <div class="col-3 themed-grid-col"></div>
+        <div class="col-3 themed-grid-col">Last Refresh @ {{time["Time"]}}</div>
     {% block content %}
     {% endblock %}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>

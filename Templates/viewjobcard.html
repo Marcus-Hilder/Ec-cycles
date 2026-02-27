@@ -1,14 +1,27 @@
-{% extends 'index.html' %}
+{% extends 'base.html' %}
 
 {% block content %}
 <div class="p-5">
     <div class="row mb-3 text-center">
         {% for jobInfo in jobInfo %}
-        <div class="col-3 themed-grid-col">{{ jobInfo.CustFName }} {{ jobInfo.CustLName }}</div>
-        <div class="col-3 themed-grid-col"></div>
-        {% endfor %}
+        <div class="col-3 themed-grid-col">
+            <h3>{{ jobInfo.CustFName }} {{ jobInfo.CustLName }}</h3>
+        </div>
+        <div class="col-3 themed-grid-col"><p>{{ jobInfo.BikeBrand }}, {{ jobInfo.BikeModel }}</p></div>
+        <div class="col-3 themed-grid-col">Insert Here</div>
+        <div class="col-3 themed-grid-col">Due : {{ jobInfo.DueDate }}</div>
+        
     </div>
-    <table class="table">
+    <form method="post">
+        <input hidden type="text" name="Cust_ID" id="" value="{{ jobInfo.Cust_ID }}">
+        <div class="card-body">
+            <textarea name="JobDetails" style="height: 200px;"class="col-12 col-md-12 col-lg-12">{{jobInfo.JobDetails}}</textarea>
+        </div>
+        {% endfor %}
+        <button class="btn btn-outline-success m-3" type="submit">Update</button>
+    </form>
+    
+    <!-- <table class="table">
         <thead>
         <tr>
             <th scope="col">Job ID</th>
@@ -30,6 +43,6 @@
             </tr>
             {% endfor %}
         </tbody>
-    </table>
+    </table> -->
 </div>
 {% endblock %}

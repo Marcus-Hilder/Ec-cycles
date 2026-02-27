@@ -24,7 +24,7 @@
                 <td>{{ JobInfo.Cust_ID }}</td>
                 <td>{{ JobInfo.custFName }} {{ JobInfo.custLName }}</td>
                 <td>{{ JobInfo.BikeBrand }}, {{ JobInfo.BikeModel }}</td>
-                <td><form action="{{ url_for('JobSearch', id=JobInfo.Cust_ID) }}" method="get">
+                <td><form action="{{ url_for('ViewJobCard', id=JobInfo.jobID) }}" method="get">
                     <button class="btn btn-outline-Primary m-2" type="submit">Select</button></form></td> 
             </tr>
             {% endfor %}

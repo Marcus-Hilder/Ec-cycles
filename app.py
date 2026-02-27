@@ -1,9 +1,17 @@
 from flask import Flask, render_template,request, redirect, url_for, flash
 import sqlite3
+import datetime
 
 app = Flask(__name__)
 app.secret_key = "supersecretkey"
-
+def time_gen():
+    time_dict = {"":""}
+    day_info = datetime.datetime.now()
+    date = day_info.strftime("%x")
+    time = day_info.strftime("%X")
+    time_dict["Date"] = date
+    time_dict["Time"] = time
+    return time_dict
 def get_db_conn():
     """setup connection to sql database"""
     conn = sqlite3.connect('JobCards.db')
@@ -20,14 +28,18 @@ def init_db():
 def index():
     """main home page loads curent jobs but plans to have the 
     curent day's jobs on it"""
+    time = time_gen()
+    # print(date2)
     conn = get_db_conn()
     sql = "SELECT jobs.* ,Customers.CustFName,Customers.CustLName FROM Jobs INNER JOIN Customers ON Customers.Cust_ID = Jobs.Cust_ID;"
     jobs = conn.execute(sql).fetchall()
     conn.close()
-    return render_template("index.html", jobs=jobs)
+    return render_template("index.html", jobs=jobs, time=time)
 
 @app.route('/newCust',methods=('POST','GET'))
 def newCust():
+    time = time_gen()
+
     if request.method == 'POST':
         CustFName = request.form['CustFName']
         CustLName = request.form['CustLName']
@@ -41,12 +53,12 @@ def newCust():
             conn.commit()
             conn.close()
             return redirect(url_for('index'))
-    return render_template("Newcust.html")
+    return render_template("Newcust.html", time=time)
 
 @app.route('/CustSearch', methods=['GET', 'POST'])
 def CustSearch():
-    conn = get_db_conn()
-
+    time = time_gen()
+    conn =  get_db_conn()
     search = request.args.get("search")
 
     if search:
@@ -69,10 +81,11 @@ def CustSearch():
         CustInfo = conn.execute("SELECT * FROM Customers").fetchall()
     
     conn.close()
-    return render_template("custSearch.html", CustInfo=CustInfo)
+    return render_template("custSearch.html", CustInfo=CustInfo, time=time)
 
 @app.route('/Cust/<int:id>', methods=['GET', 'POST'])
 def CustInfo(id):
+    time = time_gen()
     conn = get_db_conn()
     CustInfo = conn.execute('SELECT * FROM Customers WHERE Cust_ID = (?)',(id,)).fetchall()
     conn.close()
@@ -89,7 +102,7 @@ def CustInfo(id):
         conn.close()
         return redirect(url_for('index'))
     
-    return render_template('CustInfo.html', CustInfo=CustInfo)
+    return render_template('CustInfo.html', CustInfo=CustInfo, time = time)
 @app.route('/delete/<int:id>', methods=('POST',))
 def delete_user(id):
     print(id)
@@ -102,6 +115,7 @@ def delete_user(id):
 
 @app.route('/NewJobCard',methods=('POST','GET'))
 def NewJobCard():
+    time = time_gen()
     conn = get_db_conn()
 
     search = request.args.get('search', '')
@@ -121,13 +135,18 @@ def NewJobCard():
         return redirect(url_for('index'))
    
     conn.close()
-    return render_template("NewJobCard.html", result=result, search=search)
-
+    return render_template("NewJobCard.html", result=result, search=search, time = time)
+@app.route('/NewJobCard1',methods=('POST','GET'))
+def NewJobCard1():
+    time = time_gen()
+    conn = get_db_conn()
+    return render_template("NewjobCard1.html",time = time)
 @app.route('/JobSearch',methods=('POST','GET'))
 def JobSearch():
+    time = time_gen()
     conn = get_db_conn()
 
-    search = request.args.get("search")
+    search = request.args.get("search", time = time)
 
     if search:
         words = search.split()
@@ -149,14 +168,23 @@ def JobSearch():
         conn.close()
     
     conn.close()
-    return render_template("JobSearch.html", JobInfo=JobInfo)
-
-@app.route('/base', methods=['GET', 'POST'] )
-def base():
+    return render_template("JobSearch.html", JobInfo=JobInfo, time = time)
+@app.route('/ViewJobCard/<int:id>', methods=['GET', 'POST'] )
+def ViewJobCard(id):
+   time = time_gen()
    conn = get_db_conn()
-   sql = "SELECT jobs.* ,Customers.CustFName,Customers.CustLName FROM Jobs INNER JOIN Customers ON Customers.Cust_ID = Jobs.Cust_ID;"
-   JobInfo = conn.execute(sql).fetchall()
-   return render_template('viewjobcard.html', jobInfo=JobInfo)
+   if request.method == 'POST':
+        Cust_ID = request.form['Cust_ID']
+        
+        JobDetails = request.form['JobDetails']
+        conn.execute('UPDATE Jobs SET JobDetails = ? WHERE Cust_ID = ? ',(JobDetails,Cust_ID))
+        conn.commit()
+        conn.close()
+        return redirect(url_for('index'))
+   sql = "SELECT jobs.* ,Customers.CustFName,Customers.CustLName FROM Jobs INNER JOIN Customers ON Customers.Cust_ID = Jobs.Cust_ID WHERE JobID=?;"
+   JobInfo = conn.execute(sql,(id,)).fetchall()
+   return render_template('viewjobcard.html', jobInfo=JobInfo, time=time)
+
 
 
 if __name__ == '__main__':
