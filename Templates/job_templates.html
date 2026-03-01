@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-4">
+    <h2>Job Templates</h2>
+
+    <!-- Add new template -->
+    <form method="post" class="mb-4">
+        <div class="mb-2">
+            <input class="form-control" type="text" name="TemplateName" placeholder="Template Name" required>
+        </div>
+        <div class="mb-2">
+            <textarea class="form-control" name="TemplateText" placeholder="Template Text" rows="5" required></textarea>
+        </div>
+        <button class="btn btn-success" type="submit">Add Template</button>
+    </form>
+
+    <!-- Existing templates -->
+    <h4>Available Templates</h4>
+    <ul class="list-group">
+        {% for template in templates %}
+        <li class="list-group-item">
+            <strong>{{ template.TemplateName }}</strong>
+            <pre>{{ template.TemplateText }}</pre>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

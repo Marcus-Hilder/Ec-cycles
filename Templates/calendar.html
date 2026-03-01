@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<style>
+table {
+    height: 100%;
+    table-layout: fixed;
+}
+thead {
+    height: 10%;
+}
+tbody {
+    height: 90%;
+}
+tbody tr {
+    height: calc(100% / 6);
+}
+td {
+    vertical-align: top;
+    padding: 8px;
+    cursor: pointer;
+}
+td div.small {
+    font-size: 0.75rem;
+    background-color: #e9f2ff;
+    border-radius: 6px;
+    padding: 2px 4px;
+    margin-top: 4px;
+    word-wrap: break-word;
+}
+td.today {
+    background-color: #fff3cd; /* highlight today */
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="p-5 vh-100 d-flex flex-column">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+    <a class="btn btn-outline-primary" href="{{ url_for('calendar_view', year=prev_year, month=prev_month) }}">
+        &laquo; Previous
+    </a>
+    <h2 class="text-center mb-4">{{ month }}/{{ year }}</h2>
+    <a class="btn btn-outline-primary" href="{{ url_for('calendar_view', year=next_year, month=next_month) }}">
+        Next &raquo;
+    </a>
+    </div>
+    
+
+    <div class="flex-fill">
+        <table class="table table-bordered text-center align-middle w-100 h-100">
+            <thead class="table-dark">
+                <tr>
+                    <th>Mon</th>
+                    <th>Tue</th>
+                    <th>Wed</th>
+                    <th>Thu</th>
+                    <th>Fri</th>
+                    <th>Sat</th>
+                    <th>Sun</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for week in calendar %}
+                <tr>
+                    {% for day in week %}
+                        {% if day == 0 %}
+                            <td></td>
+                        {% else %}
+                            <td class="{% if day == today %}today{% endif %}"
+                                onclick="window.location.href='{{ url_for('jobs_by_day', year=year, month=month, day=day) }}'">
+                                <div class="fw-bold">{{ day }}</div>
+
+                                {% if day in jobs %}
+                                    {% for job in jobs[day] %}
+                                        <div class="small"
+                                             onclick="event.stopPropagation(); window.location.href='{{ url_for('ViewJobCard', id=job['JobID']) }}'">
+                                            {{ job['CustFName'] }} {{ job['CustLName'] }}: {{ job['JobDetails'] }}
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            </td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+{% endblock %}

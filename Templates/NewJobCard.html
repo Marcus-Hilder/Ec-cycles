@@ -1,61 +1,89 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New job</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<header>
-    <a  href="/"><img id="logo" src="{{ url_for('static', filename='EC_Logo_Black.jpg') }}" alt="Error"></a>
-    <a href="/newCust"><button>new Customers</button></a>
-    <a href="/NewJobCard"><button>New Job</button></a>
-    <a href="/CustSearch"><button>Search</button></a>
-</header>
-<body>
+{% extends 'base.html' %}
 {% block content %}
-<div style="text-align: center;">
-    <form method="get" action="{{ url_for('NewJobCard') }}">
-        <input type="text" name="search" placeholder="Search customers" value="{{ search }}">
-        <button type="submit">Search</button>
-    </form>
+<div class="container py-4">
+    <div class="col-12 text-align-center">
+        <form method="get" action="{{ url_for('NewJobCard') }}">
+            <input type="text" name="search" placeholder="Search customers" value="{{ search }}">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+    </div>
 </div>
-    <table>
+<div class="p-5">
+    <table class="table position-absloute">
+        <thead>
+        <tr>
+            <th scope="col">Customer ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Phone number</th>
+            <th scope="col"></th>
+              
+        </tr>
+        </thead>
         <tbody>
             {% for  result in  result %}
             <tr>                
                 <td>{{result.Cust_ID}}</td>
                 <td>{{result.CustFName}} {{result.CustLName}}</td>
                 <td>{{result.CustPNumber}}</td>
-                <form method="post" >
-
-                
-                <td><input type="checkbox" name="Cust_ID" id="Cust_ID" value={{result.Cust_ID}}></td>            
+                <form method="post">
+                    <td>
+                        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                            <input type="radio" class="btn-check" value="{{result.Cust_ID}} " name="Cust_ID" id="{{result.Cust_ID}}" autocomplete="off" required>
+                            <label class="btn btn-outline-dark" for="{{result.Cust_ID}}">{{result.CustFName}}</label>    
+                        </div>
+                    </td>      
             </tr>
             {%endfor%}
         </tbody>
     </table>
-    <table>
-        <tr>
-            <td><input placeholder="Bike brand" type="text" name="BikeBrand" id="BikeBrand"></td>
+    <section class="row">
+        <div class="col-12 col-md-6 col-lg-4">
+        <div class="card">
+            <div class="card-body">
+                <td><input placeholder="Bike brand" type="text" name="BikeBrand" id="BikeBrand" required></td>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-4">
+        <div class="card">
+             <div class="card-body">
             <td><input placeholder="Bike Model" type="text" name="BikeModel" id="BikeModel"></td>
-            
-        </tr>
-    </table>
-    <table>
-        <tr>
-            <td><label for="JobDetails">Job Details</label></td>
-        </tr>
-        <tr>
-            <td><textarea name="JobDetails" id="CustDetails" style="margin-top: 1%;" ></textarea></td>
-        
-        </tr>
-        <button type="submit">submit</button>
-    </form>
-        
-        
-    </table>
+        </div>
+        </div>
+    </div> 
+    <div class="col-12 col-md-6 col-lg-4">
+        <div class="card">
+             <div class="card-body">
+            <td><input placeholder="DateRequired" type="date" name="Date" id="Date"></td>
+        </div>
+        </div>
+    </div>   
+    </section>
+          
+       
     
+    <div class="card ">
+        <div class="mb-3">
+            <label for="templateSelect">Choose Template:</label>
+            <select class="form-select" id="templateSelect">
+                <option value="">-- Select Template --</option>
+                {% for template in templates %}
+                    <option value="{{ template.TemplateText }}">{{ template.TemplateName }}</option>
+                {% endfor %}
+            </select>
+        </div>
+            <div class="card-body">
+              <textarea id="JobDetails" name="JobDetails" style="height: 200px;" class="col-12 col-md-12 col-lg-12" placeholder="Enter Job Details"></textarea>
+            </div>           
+    </div>
+    <div class="text-center">
+        <button class="btn btn-outline-success m-3" type="submit">submit</button>
+    </div> 
+    </form>
+</div>
+<script>
+    document.getElementById('templateSelect').addEventListener('change', function() {
+        document.getElementById('JobDetails').value = this.value;
+    });
+</script>
 {% endblock %}
-</body>
-</html>

@@ -2,47 +2,28 @@
 
 {% block content %}
 <div class="p-5">
-    <div class="row mb-3 text-center">
-        {% for jobInfo in jobInfo %}
-        <div class="col-3 themed-grid-col">
+   <form method="post">
+    <div class="row mb-4 text-center">
+      {% for jobInfo in jobInfo %}
+        <div class="col-4 themed-grid-col">
             <h3>{{ jobInfo.CustFName }} {{ jobInfo.CustLName }}</h3>
         </div>
-        <div class="col-3 themed-grid-col"><p>{{ jobInfo.BikeBrand }}, {{ jobInfo.BikeModel }}</p></div>
-        <div class="col-3 themed-grid-col">Insert Here</div>
-        <div class="col-3 themed-grid-col">Due : {{ jobInfo.DueDate }}</div>
-        
-    </div>
-    <form method="post">
-        <input hidden type="text" name="Cust_ID" id="" value="{{ jobInfo.Cust_ID }}">
-        <div class="card-body">
-            <textarea name="JobDetails" style="height: 200px;"class="col-12 col-md-12 col-lg-12">{{jobInfo.JobDetails}}</textarea>
+        <div class="col-4 themed-grid-col">
+            <p>{{ jobInfo.BikeBrand }}, {{ jobInfo.BikeModel }}</p>
         </div>
-        {% endfor %}
-        <button class="btn btn-outline-success m-3" type="submit">Update</button>
-    </form>
-    
-    <!-- <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">Job ID</th>
-            <th scope="col">Name</th>
-            <th scope="col">Bike</th>
-            <th scope="col">Duedate</th>
-            <th></th>
-        </tr>
-        </thead>
-        <tbody>
-            {% for jobs in jobs %}
-            <tr>
-                <td >{{ jobs.CustFName }} {{ jobs.CustLName }}</td>
-                <td>{{ jobs.jobID }}</td>
-                <td>{{ jobs.BikeBrand }}, {{ jobs.BikeModel }}</td>
-                <td></td>
-                <td id="Select"><form action="{{ url_for('CustInfo', id=jobs.Cust_ID) }}" method="get"  style="display:inline;">
-                    <button class="btn btn-outline-Primary m-3" type="submit">Select</button></form></td> 
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table> -->
+        <div class="col-4 themed-grid-col">
+            <input class="form-control" type="date" value="{{ jobInfo.DueDate }}" name="DueDate" aria-label="Due Date"/>
+        </div>
+        <input hidden type="text" name="Cust_ID" value="{{ jobInfo.Cust_ID }}">
+      {% endfor %}
+    </div>
+
+  <div class="card-body">
+      {% for jobInfo in jobInfo %}
+      <textarea name="JobDetails" style="height: 200px;" class="col-12">{{ jobInfo.JobDetails }}</textarea>
+      {% endfor %}
+  </div>
+  <button class="btn btn-outline-success m-3" type="submit">Update</button>
+</form>
 </div>
 {% endblock %}

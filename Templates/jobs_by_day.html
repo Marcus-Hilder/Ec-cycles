@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Jobs for {{ day }}/{{ month }}/{{ year }}</h2>
+<ul>
+    {% for job in jobs %}
+    <li>
+        <a href="{{ url_for('ViewJobCard', id=job['JobID']) }}">
+            {{ job['CustFName'] }} {{ job['CustLName'] }}: {{ job['JobDetails'] }}
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
