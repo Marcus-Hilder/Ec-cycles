@@ -6,88 +6,192 @@ table {
     height: 100%;
     table-layout: fixed;
 }
+
 thead {
     height: 10%;
 }
+
 tbody {
     height: 90%;
 }
+
 tbody tr {
     height: calc(100% / 6);
 }
+
 td {
     vertical-align: top;
     padding: 8px;
     cursor: pointer;
 }
-td div.small {
+
+td.today {
+    background-color: #fff3cd;
+}
+
+.job-card {
     font-size: 0.75rem;
     background-color: #e9f2ff;
     border-radius: 6px;
-    padding: 2px 4px;
+    padding: 4px;
     margin-top: 4px;
+    border: 1px solid #d0e4ff;
     word-wrap: break-word;
 }
-td.today {
-    background-color: #fff3cd; /* highlight today */
+
+.job-card:hover {
+    background-color: #d9ebff;
 }
 </style>
 {% endblock %}
 
 {% block content %}
 
-<div class="p-5 vh-100 d-flex flex-column">
+<div class="container-fluid p-4 vh-100 d-flex flex-column">
+
+    <!-- Navigation -->
     <div class="d-flex justify-content-between align-items-center mb-3">
-    <a class="btn btn-outline-primary" href="{{ url_for('calendar_view', year=prev_year, month=prev_month) }}">
-        &laquo; Previous
-    </a>
-    <h2 class="text-center mb-4">{{ month }}/{{ year }}</h2>
-    <a class="btn btn-outline-primary" href="{{ url_for('calendar_view', year=next_year, month=next_month) }}">
-        Next &raquo;
-    </a>
+
+        <a class="btn btn-outline-dark"
+           href="{{ url_for('calendar_view', year=prev_year, month=prev_month) }}">
+            &laquo; Previous
+        </a>
+
+        <div class="btn-group" role="group">
+
+            <!-- Month -->
+            <input type="radio"
+                   class="btn-check"
+                   name="view"
+                   id="monthView"
+                   autocomplete="off"
+                   checked>
+
+            <label class="btn btn-outline-primary"
+                   for="monthView"
+                   onclick="window.location.href='{{ url_for('calendar_view', year=year, month=month) }}'">
+                Month
+            </label>
+
+            <!-- Week -->
+            <input type="radio"
+                   class="btn-check"
+                   name="view"
+                   id="weekView"
+                   autocomplete="off">
+
+            <label class="btn btn-outline-primary"
+                   for="weekView"
+                   onclick="window.location.href='{{ url_for('timetable', year=year, month=month, week=0) }}'">
+                Week
+            </label>
+
+            <!-- Day -->
+            <input type="radio"
+                   class="btn-check"
+                   name="view"
+                   id="dayView"
+                   autocomplete="off">
+
+            <label class="btn btn-outline-primary"
+                   for="dayView"
+                   onclick="window.location.href='{{ url_for('jobs_by_day', year=year, month=month, day=today) }}'">
+                Day
+            </label>
+
+        </div>
+
+        <a class="btn btn-outline-dark"
+           href="{{ url_for('calendar_view', year=next_year, month=next_month) }}">
+            Next &raquo;
+        </a>
+
     </div>
-    
+
+    <!-- Month Heading -->
+    <h2 class="text-center mb-3">
+        {{ month_name }} {{ year }}
+    </h2>
+
+    <!-- Calendar -->
 
     <div class="flex-fill">
-        <table class="table table-bordered text-center align-middle w-100 h-100">
-            <thead class="table-dark">
-                <tr>
-                    <th>Mon</th>
-                    <th>Tue</th>
-                    <th>Wed</th>
-                    <th>Thu</th>
-                    <th>Fri</th>
-                    <th>Sat</th>
-                    <th>Sun</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for week in calendar %}
-                <tr>
-                    {% for day in week %}
-                        {% if day == 0 %}
-                            <td></td>
-                        {% else %}
-                            <td class="{% if day == today %}today{% endif %}"
-                                onclick="window.location.href='{{ url_for('jobs_by_day', year=year, month=month, day=day) }}'">
-                                <div class="fw-bold">{{ day }}</div>
 
-                                {% if day in jobs %}
-                                    {% for job in jobs[day] %}
-                                        <div class="small"
-                                             onclick="event.stopPropagation(); window.location.href='{{ url_for('ViewJobCard', id=job['JobID']) }}'">
-                                            {{ job['CustFName'] }} {{ job['CustLName'] }}: {{ job['JobDetails'] }}
-                                        </div>
-                                    {% endfor %}
-                                {% endif %}
-                            </td>
-                        {% endif %}
-                    {% endfor %}
+        <table class="table table-bordered text-center h-100">
+
+            <thead class="table-dark">
+
+                <tr>
+                    <th>Monday</th>
+                    <th>Tuesday</th>
+                    <th>Wednesday</th>
+                    <th>Thursday</th>
+                    <th>Friday</th>
+                    <th>Saturday</th>
+                    <th>Sunday</th>
                 </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for week in cal %}
+
+                <tr>
+
+                    {% for day in week %}
+
+                    {% if day == 0 %}
+
+                    <td></td>
+
+                    {% else %}
+
+                    <td class="{% if day == today %}today{% endif %}"
+                        onclick="window.location.href='{{ url_for('jobs_by_day', year=year, month=month, day=day) }}'">
+
+                        <div class="fw-bold">
+                            {{ day }}
+                        </div>
+
+                        {% if day in jobs %}
+
+                            {% for job in jobs[day] %}
+
+                                <div class="job-card"
+                                     onclick="event.stopPropagation(); window.location.href='{{ url_for('ViewJobCard', id=job['JobID']) }}'">
+
+                                    <strong>
+                                        {{ job['CustFName'] }}
+                                        {{ job['CustLName'] }}
+                                    </strong>
+
+                                    <br>
+
+                                    {{ job['JobDetails'] }}
+
+                                </div>
+
+                            {% endfor %}
+
+                        {% endif %}
+
+                    </td>
+
+                    {% endif %}
+
+                    {% endfor %}
+
+                </tr>
+
                 {% endfor %}
+
             </tbody>
+
         </table>
+
     </div>
 
 </div>
+
 {% endblock %}

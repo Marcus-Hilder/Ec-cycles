@@ -5,31 +5,70 @@
 <div class="container-fluid px-3 marcus_time_v3">
 
     <!-- ───────── DESKTOP: week view with prev/next week nav ───────── -->
-    <div class="d-none d-md-block mb-3">
-        <div class="d-flex justify-content-between align-items-center mb-2">
+    <div class=" d-md-block mb-3">
+        <div class="d-flex  justify-content-between align-items-center mb-2">
             <!-- Prev week -->
             {% if week > 0 %}
-                <a href="{{ url_for('timetable', year=year, month=month, week=week-1) }}" class="btn btn-outline-success btn-sm">
-                    <span class="material-symbols-outlined" style="vertical-align:middle;">arrow_back_ios</span> Prev Week
+                <a href="{{ url_for('timetable', year=year, month=month, week=week-1) }}" class="btn btn-outline-dark btn-sm">
+                    &laquo; Prev Week
                 </a>
             {% else %}
                 {# Jump to last week of previous month #}
-                <a href="{{ url_for('timetable', year=prev_year, month=prev_month, week=prev_week_count) }}" class="btn btn-outline-success btn-sm">
-                    <span class="material-symbols-outlined" style="vertical-align:middle;">arrow_back_ios</span> Prev Week
+                <a href="{{ url_for('timetable', year=prev_year, month=prev_month, week=prev_week_count) }}" class="btn btn-outline-dark btn-sm">
+                    &laquo; Prev Week
                 </a>
             {% endif %}
-            <h3 class="col-6 col-md-3 mx-auto py-2 mt-4 text-center text-light rounded custom-page-header">{{ month_name }} {{ year }} -- Week {{ week + 1 }}</h3>
+            <div class="btn-group" role="group">
+
+                <!-- Month -->
+                <input type="radio"
+                       class="btn-check"
+                       name="view"
+                       id="monthView"
+                       {% if request.endpoint == 'calendar_view' %}checked{% endif %}>
+                <label class="btn btn-outline-primary"
+                       for="monthView"
+                       onclick="window.location.href='{{ url_for('calendar_view', year=year, month=month) }}'">
+                    Month
+                </label>
+            
+                <!-- Week -->
+                <input type="radio"
+                       class="btn-check"
+                       name="view"
+                       id="weekView"
+                       {% if request.endpoint == 'timetable' %}checked{% endif %}>
+                <label class="btn btn-outline-primary"
+                       for="weekView"
+                       onclick="window.location.href='{{ url_for('timetable', year=year, month=month, week=week) }}'">
+                    Week
+                </label>
+            
+                <!-- Day -->
+                <input type="radio"
+                       class="btn-check"
+                       name="view"
+                       id="dayView"
+                       {% if request.endpoint == 'jobs_by_day' %}checked{% endif %}>
+                <label class="btn btn-outline-primary"
+                       for="dayView"
+                       onclick="window.location.href='{{ url_for('jobs_by_day', year=year, month=month, day=today) }}'">
+                    Day
+                </label>
+
+            </div>
+
             
 
             <!-- Next week -->
             {% if week < cal|length - 1 %}
-                <a href="{{ url_for('timetable', year=year, month=month, week=week+1) }}" class="btn btn-outline-success btn-sm">
-                    Next Week <span class="material-symbols-outlined" style="vertical-align:middle;">arrow_forward_ios</span>
+                <a href="{{ url_for('timetable', year=year, month=month, week=week+1) }}" class="btn btn-outline-dark btn-sm">
+                    Next Week &raquo;
                 </a>
             {% else %}
                 {# Jump to first week of next month #}
-                <a href="{{ url_for('timetable', year=next_year, month=next_month, week=0) }}" class="btn btn-outline-success btn-sm">
-                    Next Week <span class="material-symbols-outlined" style="vertical-align:middle;">arrow_forward_ios</span>
+                <a href="{{ url_for('timetable', year=next_year, month=next_month, week=0) }}" class="btn btn-outline-dark btn-sm">
+                    Next Week &raquo;
                 </a>
             {% endif %}
         </div>
@@ -42,8 +81,12 @@
             {% for day in cal_week %}
                 {% set count.value = count.value + 1 %}
                 <div class="flex-fill">
-                    <div class="card h-100">
-                        <div class="card-header bg-success text-white text-center py-2">
+                    <div class="card h-100 {% if day == today %}bg-light{% endif %}"
+                        {% if day != 0 %}
+                        onclick="window.location.href='{{ url_for('jobs_by_day', year=year, month=month, day=day) }}'"
+                        style="cursor:pointer;"
+                        {% endif %}>
+                        <div class="card-header bg-dark text-white text-center py-2">
                             <strong>
                                 <!-- Check if the day is valid and if its vaild give it a date -->
                                 {{ day if day != 0 else '-' }}
@@ -60,8 +103,22 @@
                             </strong>
                             
                         </div>
-                        <div class="card-body p-2 d-flex flex-column gap-2 ">
-                           
+                        <div class="card-body p-2 d-flex flex-column gap-2">
+
+                            {% if day != 0 and day in jobs %}
+
+                                {% for job in jobs[day] %}
+                                    <div class="border rounded p-1 small"
+                                         onclick="event.stopPropagation(); window.location.href='{{ url_for('ViewJobCard', id=job['JobID']) }}'">
+
+                                        <strong>{{ job['CustFName'] }} {{ job['CustLName'] }}</strong><br>
+                                        {{ job['JobDetails'] }}
+
+                                    </div>
+                                {% endfor %}
+                                
+                            {% endif %}
+
                         </div>
                     </div>
                 </div>
@@ -89,139 +146,6 @@
 
     
 
-<!--
-
-
-
-
-
-
-
-    <!-- ───────── MOBILE: single day view with prev/next day nav ───────── --> 
-    <div class="d-md-none">
-        {% set count = namespace(value=0) %}
-        {% for day in cal_week %}
-            {% set count.value = count.value + 1 %}
-            {% if day == today %}
-                <div class="card">
-                    <div class="container text-center bg-success px-3 border_time">
-                        <div class="row align-items-center py-2">
-
-                            <!-- Prev day -->
-                            <div class="col-2">
-                                {% if count.value > 1 and cal_week[count.value - 2] != 0 %}
-                                    <a href="{{ url_for('timetable', year=year, month=month, week=week, today=cal_week[count.value - 2]) }}" class="text-white">
-                                        <span class="material-symbols-outlined">arrow_back_ios</span>
-                                    </a>
-                                {% elif week > 0 %}
-                                    {# Go to last non-zero day of previous week #}
-                                    {% set prev_cal_week = cal[week - 1] %}
-                                    {% for d in prev_cal_week|reverse %}
-                                        {% if d != 0 and loop.first %}
-                                            <a href="{{ url_for('timetable', year=year, month=month, week=week-1, today=d) }}" class="text-white">
-                                                <span class="material-symbols-outlined">arrow_back_ios</span>
-                                            </a>
-                                        {% endif %}
-                                    {% endfor %}
-                                {% else %}
-                                    {# Go to last day of previous month #}
-                                    {% set prev_last_week = month_back[-1] %}
-                                    {% for d in prev_last_week|reverse %}
-                                        {% if d != 0 and loop.first %}
-                                            <a href="{{ url_for('timetable', year=prev_year, month=prev_month, week=month_back|length - 1, today=d) }}" class="text-white">
-                                                <span class="material-symbols-outlined">arrow_back_ios</span>
-                                            </a>
-                                        {% endif %}
-                                    {% endfor %}
-                                {% endif %}
-                            </div>
-
-                            <!-- Date label -->
-                            <div class="col-8">
-                                <span class="badge text-bg-danger p-2">
-                                    <strong>Upcoming events<br><br>{{ day }} of {{ month_name }}</strong>
-                                </span>
-                            </div>
-
-                            <!-- Next day -->
-                            <div class="col-2">
-                                {% if count.value < 7 and cal_week[count.value] != 0 %}
-                                    <a href="{{ url_for('timetable', year=year, month=month, week=week, today=cal_week[count.value]) }}" class="text-white">
-                                        <span class="material-symbols-outlined">arrow_forward_ios</span>
-                                    </a>
-                                {% elif week < cal|length - 1 %}
-                                    {# Go to first non-zero day of next week #}
-                                    {% set next_cal_week = cal[week + 1] %}
-                                    {% for d in next_cal_week %}
-                                        {% if d != 0 and loop.first %}
-                                            <a href="{{ url_for('timetable', year=year, month=month, week=week+1, today=d) }}" class="text-white">
-                                                <span class="material-symbols-outlined">arrow_forward_ios</span>
-                                            </a>
-                                        {% endif %}
-                                    {% endfor %}
-                                {% else %}
-                                    {# Go to first day of next month #}
-                                    {% set next_first_week = month_forward[0] %}
-                                    {% for d in next_first_week %}
-                                        {% if d != 0 and loop.first %}
-                                            <a href="{{ url_for('timetable', year=next_year, month=next_month, week=0, today=d) }}" class="text-white">
-                                                <span class="material-symbols-outlined">arrow_forward_ios</span>
-                                            </a>
-                                        {% endif %}
-                                    {% endfor %}
-                                {% endif %}
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div class="card-body p-2 d-flex flex-column gap-2">
-                        {% set found = namespace(value=false) %}
-                        {% for id, items in club_dic.items() %}
-                            {% if items["club_day"] == count.value %}
-                                {% set found.value = true %}
-                                <div class="card card-body p-2">
-                                    <div class="container-fluid">
-                                        <div class="row">
-                                            <div class="col">
-                                                <span class="badge text-bg-danger m-2">{{ items["club_slot"] }}</span>
-                                            </div>
-                                            <div class="col-8">
-                                                <button class="card card-body p-2" type="button"
-                                                    data-bs-toggle="collapse"
-                                                    data-bs-target="#collapse-{{ items['club_name'].replace(' ', '-') }}"
-                                                    aria-expanded="false">
-                                                    <p class="mb-1 fw-semibold small">{{ items["club_name"] }}</p>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endif %}
-                        {% endfor %}
-                        {% if not found.value %}
-                            <p class="text-muted small text-center mt-auto mb-auto">No clubs running today</p>
-                        {% endif %}
-                    </div>
-                </div>
-            {% endif %}
-        {% endfor %}
-    </div>
-    <!-- ───────── Collapse panels (shared) ───────── -->
-    {% for id, items in club_dic.items() %}
-        <div class="collapse" id="collapse-{{ items['club_name'].replace(' ', '-') }}">
-            <div id="test" style="position: relative;" class="container text-center">
-                <div class="col-11 col-md-9 col-lg-6 mt-4 mx-auto">
-                    <div class="card card-body text-center">
-                        <span class="badge text-bg-danger m-2">{{ items["club_name"] }}</span>
-                        {{ items["club_description"] }}
-                    </div>
-                </div>
-            </div>
-        </div>
-    {% endfor %}
-
-    
 </div> 
 
 <script>
