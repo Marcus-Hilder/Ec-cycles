@@ -202,6 +202,117 @@ def ViewJobCard(id):
    sql = "SELECT jobs.* ,Customers.CustFName,Customers.CustLName FROM Jobs INNER JOIN Customers ON Customers.Cust_ID = Jobs.Cust_ID WHERE JobID=?;"
    JobInfo = conn.execute(sql,(id,)).fetchall()
    return render_template('viewjobcard.html', jobInfo=JobInfo, time=time)
+
+@app.route('/calendar/week')
+def timetable():
+    time = time_gen()
+    page_title = "EC Cycles | calendar"
+
+    year = request.args.get('year', type=int)
+    month = request.args.get('month', type=int)
+    week = request.args.get('week', type=int)
+    today_param = request.args.get('today', type=int)  #for mobile day nav
+
+    today_dt = datetime.datetime.now()
+    if not year:
+        year = today_dt.year
+    if not month:
+        month = today_dt.month
+
+    cal = calendar.monthcalendar(year, month)
+
+    # Prev/next month with year wraparound
+    prev_month = 12 if month == 1 else month - 1
+    prev_year  = year - 1 if month == 1 else year
+    next_month = 1 if month == 12 else month + 1
+    next_year  = year + 1 if month == 12 else year
+
+    prev_week_count = len(calendar.monthcalendar(prev_year, prev_month)) - 1
+
+    month_back    = calendar.monthcalendar(prev_year, prev_month)
+    month_forward = calendar.monthcalendar(next_year, next_month)
+    month_name    = calendar.month_name[month]
+
+    # Determine active week
+    if week is None:
+        week = 0
+        for i, for_week in enumerate(cal):
+            if today_dt.day in for_week and month == today_dt.month and year == today_dt.year:
+                week = i
+                break
+
+    cal_week = cal[week]
+
+    # Determine active day
+    if today_param and today_param in cal_week:
+        today = today_param
+    elif today_dt.day in cal_week and month == today_dt.month and year == today_dt.year:
+        today = today_dt.day
+    else:
+        today = next((d for d in cal_week if d != 0), 0)
+    cal = calendar.monthcalendar(year, month)
+
+    # Fetch jobs for this month
+    conn = get_db_conn()
+    cursor = conn.execute("""
+        SELECT jobs.*, Customers.CustFName, Customers.CustLName
+        FROM Jobs
+        INNER JOIN Customers ON Customers.Cust_ID = Jobs.Cust_ID
+        WHERE strftime('%Y', DueDate) = ? AND strftime('%m', DueDate) = ?
+    """, (str(year), f"{month:02d}"))
+    jobs = cursor.fetchall()
+    conn.close()
+
+    # Convert jobs into dictionary {day_number: [jobs]}, only 2nd line of JobDetails
+    job_dict = {}
+    for job in jobs:
+        job_day = int(job["DueDate"].split("-")[2])
+        lines = job["JobDetails"].splitlines()
+        second_line = lines[1] if len(lines) > 1 else ""  # second line only
+
+        job_copy = dict(job)
+        job_copy["JobDetails"] = second_line
+
+        if job_day not in job_dict:
+            job_dict[job_day] = []
+        job_dict[job_day].append(job_copy)
+    """
+    conn = get_db_conn()
+    conn.row_factory = sqlite3.Row
+    club_all = conn.execute("SELECT * FROM clubs").fetchall()
+    club_dic = {
+        row["id"]: {
+            "club_day":         int(row["club_day"]),
+            "club_slot":        row["club_slot"],
+            "club_name":        row["club_name"],
+            "club_description": row["club_description"],
+        }
+        for row in club_all
+    }
+    """
+
+    return render_template(
+        "calendarWeek.html",
+        time = time,
+        page_title=page_title,
+        cal=cal,
+        cal_week=cal_week,
+        week=week,
+        month_name=month_name,
+        month=month,
+        year=year,
+        prev_month=prev_month,
+        prev_year=prev_year,
+        next_month=next_month,
+        next_year=next_year,
+        prev_week_count=prev_week_count,
+        month_back=month_back,
+        month_forward=month_forward,
+        #club_dic=club_dic,
+        today=today,
+        #active_page="calendarWeek",
+    )
+
 @app.route('/calendar', methods=['GET'])
 def calendar_view():
     time = time_gen()
