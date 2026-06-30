@@ -1,4 +1,26 @@
 <html lang="en">
+<style>
+  .job-card[data-status="Not Started"],
+.job-card-lg[data-status="Not Started"],
+.border.rounded[data-status="Not Started"] {
+    background-color: #f8d7da !important;
+    border-color: #f5c2c7 !important;
+}
+
+.job-card[data-status="In Progress"],
+.job-card-lg[data-status="In Progress"],
+.border.rounded[data-status="In Progress"] {
+    background-color: #fff3cd !important;
+    border-color: #ffe69c !important;
+}
+
+.job-card[data-status="Done"],
+.job-card-lg[data-status="Done"],
+.border.rounded[data-status="Done"] {
+    background-color: #d1e7dd !important;
+    border-color: #a3cfbb !important;
+}
+</style>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

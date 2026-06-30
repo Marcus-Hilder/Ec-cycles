@@ -37,21 +37,40 @@
         </tbody>
     </table>
     <section class="row">
-        <div class="col-12 col-md-6 col-lg-4">
+        <div class="col-12 col-md-6 col-lg-3">
         <div class="card">
             <div class="card-body">
                 <td><input placeholder="Bike brand" type="text" name="BikeBrand" id="BikeBrand" required></td>
             </div>
         </div>
     </div>
-    <div class="col-12 col-md-6 col-lg-4">
+    <div class="col-12 col-md-6 col-lg-3">
         <div class="card">
              <div class="card-body">
-            <td><input placeholder="Bike Model" type="text" name="BikeModel" id="BikeModel"></td>
-        </div>
+                <td><input placeholder="Bike Model" type="text" name="BikeModel" id="BikeModel"></td>
+            </div>
         </div>
     </div> 
-    <div class="col-12 col-md-6 col-lg-4">
+    <div class="col-12 col-md-6 col col-lg-3">
+        
+    <div class="card">
+        <div class="card-body text-center">
+            <div class="btn-group" role="group">
+                <input type="radio" class="btn-check" name="Status" id="statusNotStarted" value="Not Started" checked>
+                <label class="btn btn-outline-danger" for="statusNotStarted">Not Started</label>
+
+                <input type="radio" class="btn-check" name="Status" id="statusInProgress" value="In Progress">
+                <label class="btn btn-outline-warning" for="statusInProgress">In Progress</label>
+
+                <input type="radio" class="btn-check" name="Status" id="statusDone" value="Done">
+                <label class="btn btn-outline-success" for="statusDone">Done</label>
+            </div>
+        </div>
+    </div>
+</div>
+        
+
+    <div class="col-12 col-md-6 col-lg-3">
         <div class="card">
              <div class="card-body">
             <td><input placeholder="DateRequired" type="date" name="Date" id="Date"></td>

@@ -5,13 +5,28 @@
    <form method="post">
     <div class="row mb-4 text-center">
       {% for jobInfo in jobInfo %}
-        <div class="col-4 themed-grid-col">
+        <div class="col-3 themed-grid-col">
             <h3>{{ jobInfo.CustFName }} {{ jobInfo.CustLName }}</h3>
         </div>
-        <div class="col-4 themed-grid-col">
+        <div class="col-3 themed-grid-col">
             <p>{{ jobInfo.BikeBrand }}, {{ jobInfo.BikeModel }}</p>
         </div>
-        <div class="col-4 themed-grid-col">
+        <div class="col-3 themed-grid-col">
+            <div class="btn-group" role="group">
+                <input type="radio" class="btn-check" name="Status" id="statusNotStarted" value="Not Started"
+                       {% if jobInfo.Status == 'Not Started' or not jobInfo.Status %}checked{% endif %}>
+                <label class="btn btn-outline-danger" for="statusNotStarted">Not Started</label>
+            
+                <input type="radio" class="btn-check" name="Status" id="statusInProgress" value="In Progress"
+                       {% if jobInfo.Status == 'In Progress' %}checked{% endif %}>
+                <label class="btn btn-outline-warning" for="statusInProgress">In Progress</label>
+            
+                <input type="radio" class="btn-check" name="Status" id="statusDone" value="Done"
+                       {% if jobInfo.Status == 'Done' %}checked{% endif %}>
+                <label class="btn btn-outline-success" for="statusDone">Done</label>
+            </div>
+        </div>
+        <div class="col-3 themed-grid-col">
             <input class="form-control" type="date" value="{{ jobInfo.DueDate }}" name="DueDate" aria-label="Due Date"/>
         </div>
         <input hidden type="text" name="Cust_ID" value="{{ jobInfo.Cust_ID }}">
