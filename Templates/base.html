@@ -10,8 +10,15 @@
 .job-card[data-status="In Progress"],
 .job-card-lg[data-status="In Progress"],
 .border.rounded[data-status="In Progress"] {
-    background-color: #fff3cd !important;
+    background-color: #eff540 !important;
     border-color: #ffe69c !important;
+}
+
+.job-card[data-status="Parked"],
+.job-card-lg[data-status="Parked"],
+.border.rounded[data-status="Parked"] {
+    background-color: #0dcaf0 !important;
+    border-color: #5bd5ed !important;
 }
 
 .job-card[data-status="Done"],
@@ -43,14 +50,13 @@
                 <a class="nav-link" href="/CustSearch">Customers</a>
               </li>
               <li class="nav-item">
-                <a href="/calendar" class="nav-link">Calander</a>
+                <a href="/calendar" class="nav-link">Calendar</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="/JobSearch">Jobs</a>
               </li>
-              <li class="nav-item">
-                <a href="/JobTemplates" class="nav-link">Job Card Template</a>
-              </li>
+
+              
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   New
@@ -58,6 +64,7 @@
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="#">New customer</a></li>
                   <li><a class="dropdown-item" href="/NewJobCard">New Job</a></li>
+                  <li><a class="dropdown-item" href="/JobTemplates" class="nav-link">Job Card Template</a></li>
                   <!-- <li><hr class="dropdown-divider"></li>
                   <li><a class="dropdown-item" href="#">Something else here</a></li> -->
                 </ul>

@@ -25,9 +25,7 @@ td {
     cursor: pointer;
 }
 
-td.today {
-    background-color: #fff3cd;
-}
+ 
 
 .job-card {
     font-size: 0.75rem;
@@ -155,23 +153,22 @@ td.today {
                         </div>
 
                         {% if day in jobs %}
-
+                            {% set count = namespace(value=0) %}
                             {% for job in jobs[day] %}
-
-                                <div class="job-card"
-                                     onclick="event.stopPropagation(); window.location.href='{{ url_for('ViewJobCard', id=job['JobID']) }}'">
-
-                                    <strong>
-                                        {{ job['CustFName'] }}
-                                        {{ job['CustLName'] }}
-                                    </strong>
-
-                                    <br>
-
+                                {% set count.value = count.value + 1 %}
+                                    {% if count.value <= 2 %}
+                                    <div class="border rounded p-1 small"
+                                     data-status="{{ job['Status'] }}"
+                                    onclick="event.stopPropagation(); window.location.href='{{ url_for('ViewJobCard', id=job['JobID']) }}'">
+                                    <strong>{{ job['CustFName'] }} {{ job['CustLName'] }}</strong><br>
                                     {{ job['JobDetails'] }}
-
-                                </div>
-
+                                    </div>
+                                    {% else %}
+                                    <div class="border rounded p-1 small"   
+                                        <strong>Click to see more</strong>
+                                    </div>
+                                    {% endif %}
+                                
                             {% endfor %}
 
                         {% endif %}

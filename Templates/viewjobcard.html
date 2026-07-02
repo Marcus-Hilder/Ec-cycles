@@ -20,6 +20,10 @@
                 <input type="radio" class="btn-check" name="Status" id="statusInProgress" value="In Progress"
                        {% if jobInfo.Status == 'In Progress' %}checked{% endif %}>
                 <label class="btn btn-outline-warning" for="statusInProgress">In Progress</label>
+
+                <input type="radio" class="btn-check" name="Status" id="statusParked" value="Parked"
+                       {% if jobInfo.Status == 'Parked' %}checked{% endif %}>
+                <label class="btn btn-outline-info" for="statusParked">Parked</label>
             
                 <input type="radio" class="btn-check" name="Status" id="statusDone" value="Done"
                        {% if jobInfo.Status == 'Done' %}checked{% endif %}>

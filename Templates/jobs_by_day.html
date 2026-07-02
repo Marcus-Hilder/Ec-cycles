@@ -75,7 +75,7 @@
             <div class="card-body">
                 {% if jobs %}
                     {% for job in jobs %}
-                        <div class="job-card-lg"
+                        <div class="job-card-lg" data-status="{{ job['Status'] }}"
                              onclick="window.location.href='{{ url_for('ViewJobCard', id=job['JobID']) }}'">
                             <div class="fw-bold fs-5">{{ job['CustFName'] }} {{ job['CustLName'] }}</div>
                             <div>{{ job['JobDetails'] }}</div>

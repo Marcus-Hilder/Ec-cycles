@@ -1,7 +1,11 @@
 {% extends 'Base.html' %}
 
 {% block content %}
-
+<style>
+    .today {
+    background-color: #b5edf0;
+}
+</style>
 <div class="container-fluid px-3 marcus_time_v3">
 
     <!-- ───────── DESKTOP: week view with prev/next week nav ───────── -->
@@ -98,7 +102,7 @@
                         {{ 'Sunday' if count.value == 7}}
                     </strong>
                 </div>
-                <div class="card-body p-2 d-flex flex-column gap-2">
+                <div class="card-body p-2 d-flex flex-column gap-2 {% if day == today %}today{% endif %}">
                     {% if day in jobs %}
                         {% for job in jobs[day] %}
                             <div class="border rounded p-1 small"

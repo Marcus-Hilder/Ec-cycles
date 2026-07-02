@@ -59,8 +59,11 @@
                 <input type="radio" class="btn-check" name="Status" id="statusNotStarted" value="Not Started" checked>
                 <label class="btn btn-outline-danger" for="statusNotStarted">Not Started</label>
 
+                <input type="radio" class="btn-check" name="Status" id="statusParked" value="Parked">
+                <label class="btn btn-outline-warning" for="statusParked">Parked</label>
+
                 <input type="radio" class="btn-check" name="Status" id="statusInProgress" value="In Progress">
-                <label class="btn btn-outline-warning" for="statusInProgress">In Progress</label>
+                <label class="btn btn-outline-info" for="statusInProgress">In Progress</label>
 
                 <input type="radio" class="btn-check" name="Status" id="statusDone" value="Done">
                 <label class="btn btn-outline-success" for="statusDone">Done</label>
@@ -68,7 +71,13 @@
         </div>
     </div>
 </div>
-        
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="card">
+             <div class="card-body">
+            <td><input placeholder="DateRequired" type="range" name="time" id="time"></td>
+        </div>
+        </div>
+    </div>  
 
     <div class="col-12 col-md-6 col-lg-3">
         <div class="card">
